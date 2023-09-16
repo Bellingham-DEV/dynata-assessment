@@ -1,0 +1,37 @@
+x-app: &app
+  build:
+    context: .
+  image: dynata-assessment:0.0.1
+  environment: &env
+    RUBY_ENV: ${RUBY_ENV:-development}
+    HTTPSIGNER_SECRET_KEY: ${HTTPSIGNER_SECRET_KEY}
+    HTTPSIGNER_ACCESS_KEY: ${HTTPSIGNER_ACCESS_KEY}
+  tmpfs:
+    - /tmp
+
+x-backend: &backend
+  <<: *app
+  stdin_open: true
+  tty: true
+  volumes:
+    - .:/app:cached
+    - bundle:/usr/local/bundle
+  environment: &backend_environment
+    <<: *env
+    EDITOR: vim
+
+services:
+  web:
+    <<: *backend
+    command: "echo 'NOOP'"
+    ports:
+      - '3000:3000'
+  test:
+    <<: *backend
+    command: bundle exec rspec
+    environment:
+      <<: *env
+      RUBY_ENV: test
+
+volumes:
+  bundle:

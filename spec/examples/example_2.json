@@ -1,0 +1,6 @@
+{
+"http_frame": "POST /resource//posts?test=2&example=all+please&1234=4321&test=1 HTTP/1.1\r\nHost: test.com\r\nChoice: C\r\nChoice: A\r\nChoice: B\r\nContent-Length: 25\r\n\r\n{\"some_key\":\"some_value\"}",
+  "canonical_request" : "POST\n/resource//posts\n1234=4321&example=all%20please&test=2%2C1\nchoice:C,A,B\ncontent-length:25\nhost:test.com\n\n43ee763040973ca602549c94c5357a41c280afbb54e48d436af88f4e40d73081",
+  "string_to_sign": "28fe39b38e2590cbc242dd417f604ca4a6fe91fd9572d8f47520efedd49670e0",
+  "signature": "18e53de99fb8cf5824fc879336a12927dcf7f6d7c42607f87a02a13f690134b1"
+}
