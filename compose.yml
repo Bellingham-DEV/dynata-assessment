@@ -23,7 +23,7 @@ x-backend: &backend
 services:
   web:
     <<: *backend
-    command: "echo 'NOOP'"
+    command: bundle exec ruby app.rb
     ports:
       - '3000:3000'
   test:

@@ -12,8 +12,17 @@ class HttpSigner
   end
 
   def call(http_frame)
+    sign(http_frame)[:signature]
+  end
+
+  def sign(http_frame)
+    return { canonical_request: nil, string_to_sign: nil, signature: nil } if http_frame.nil? || http_frame.empty?
+
     canonical_request = get_canonical_request(http_frame)
-    lowercase(hex(hmac_sha256(signing_key, string_to_sign(canonical_request))))
+    stringtosign = string_to_sign(canonical_request)
+    signature = lowercase(hex(hmac_sha256(signing_key, stringtosign)))
+
+    { canonical_request:, string_to_sign: stringtosign, signature: }
   end
 
   private
@@ -34,16 +43,18 @@ class HttpSigner
     canonical_headers = get_canonical_headers(headers)
     hashed_payload = lowercase(hex(sha256(payload)))
 
-    "#{http_method}\n#{path}\n#{canonical_query}\n#{canonical_headers}\n\n#{hashed_payload}"
+    req = "#{http_method}\n#{path}"
+    req += "\n#{canonical_query}" unless canonical_query.empty?
+    req += "\n#{canonical_headers}\n\n#{hashed_payload}"
   end
 
 
   def parse_http_frame(http_frame)
     header_lines, payload = http_frame.split("\r\n\r\n")
     payload ||= ''
-    header_lines = header_lines.split("\r\n")
+    header_lines = ( header_lines || '' ).split("\r\n")
     http_method, path_and_query, http_version = header_lines[0].split(' ')
-    path, query = path_and_query.split('?')
+    path, query = ( path_and_query || '' ).split('?')
     headers = header_lines[1..-1].map { |x| x.split(': ', 2) }
     headers = combine_params(headers).to_h
 
@@ -98,7 +109,7 @@ class HttpSigner
   end
 
   def uri_encode(value)
-    already_encoded = CGI.unescape(value) != value.gsub('+', ' ') 
+    already_encoded = CGI.unescape(value) != value.gsub('+', ' ')
     encoded = CGI.escape(value.gsub('+',' ')).gsub('+', '%20')
 
     return encoded if !(value =~ /\A[a-zA-Z0-9\-\.\_\~]*\z/).nil? ||

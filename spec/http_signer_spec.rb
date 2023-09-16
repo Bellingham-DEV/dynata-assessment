@@ -25,19 +25,23 @@ RSpec.describe HttpSigner do
 		let(:example1) { load_json('example_1.json') }
 		let(:example2) { load_json('example_2.json') }
 		let(:example3) { load_json('example_3.json') }
+		let(:example4) { load_json('example_4.json') }
 
     def standard_call_expectations(example)
 			frame = example['http_frame']
 
       # intermediary generation
-      returned_canonical_request = service.send(:get_canonical_request, frame)
+      signed = service.sign(frame)
+      returned_canonical_request = signed[:canonical_request]
       expect(returned_canonical_request).to eq(example['canonical_request'])
-      returned_string_to_sign = service.send(:string_to_sign, returned_canonical_request)
+      returned_string_to_sign = signed[:string_to_sign]
       expect(returned_string_to_sign).to eq(example['string_to_sign'])
 
       # call returns expected signature
 			expected_signature = example['signature']
 			returned_signature = service.call(frame)
+			expect(returned_signature).to eq(expected_signature)
+			returned_signature = signed[:signature]
 			expect(returned_signature).to eq(expected_signature)
     end
 
@@ -52,6 +56,10 @@ RSpec.describe HttpSigner do
     it 'returns the correct signature when the frame contains a payload with linefeeds' do
       standard_call_expectations(example3)
     end
+
+		it 'returns the correct signature when the frame has no parameters' do
+      standard_call_expectations(example4)
+		end
 
   end
 end

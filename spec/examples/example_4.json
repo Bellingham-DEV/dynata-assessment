@@ -1,0 +1,6 @@
+{
+  "http_frame": "POST /resource/123/comments HTTP/1.1\r\nHost: test.com\r\nContent-Length: 65\r\nContent-Type: text/plain\r\n\r\nthis is a sentence.\r\nthis sentence is on a new line.\r\nso is this.",
+  "canonical_request" : "POST\n/resource/123/comments\ncontent-length:65\ncontent-type:text/plain\nhost:test.com\n\na41088b4f429f0a67ce7c5a2b8507d24ae475f3a93e0840a0986fc4e45ff0487",
+  "string_to_sign": "13219bfb721a679996ab6a224240cd473382cc3c3b6c8b282c319249caf6e7e6",
+  "signature": "6a5d78e490f065d8f08ceb000bca20110108b7c8aedfbde877cc5e6898953fc3"
+}

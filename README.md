@@ -16,21 +16,35 @@ service = HttpSigner.new(access_key:, secret_key:)
 signature = service.call(http_frame)
 ```
 
-# Running the Tests
+# Setup
 
 For convenience, this assessment project is setup to use a Docker runtime environment.
 
-The following instructions assume that  you have a working Docker runtime and `docker-compose` is installed.
-
-## Setup
-
-`docker-compose build`
-
-## Running
+Make sure you have Docker installed and running, with the `docker-compose` tool installed and working.
 
 ```bash
+# Copy the example envvars
+cp .env.sample .env
+```
+
+# Demo
+
+For ease of assessment, the solution is presented using a Sinatra web application which listens on port `3000`.
+
+```bash
+# Start the Web app and run automated tests
 docker-compose up
-# OR
+```
+
+Use your web browser to visit [http://localhost:3000](http://localhost:3000/).
+
+Paste a sample http frame into the textarea and hit submit.
+
+# Running Just the Tests
+
+Tests are automatically run as a part of the Docker Compose application, but they can be run in isolation.
+
+```bash
 docker-compose run test bundle exec rspec
 ```
 
