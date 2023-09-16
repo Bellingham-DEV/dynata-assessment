@@ -1,6 +1,6 @@
 {
-  "http_frame": "GET /resource?test=true&mix=1%C2%B11 HTTP/1.1\r\nHost: test.com\r\nTimestamp: 2023-08-03T10:24:03.012Z\r\n\r\n",
-  "canonical_request" : "GET\n/resource\nmix=1%C2%B11&test=true\nhost:test.com\ntimestamp:2023-08-03T10:24:03.012Z\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "string_to_sign": "0c5a284aca21eb658a5e4503729f23c47a648e6acaf4613e917d3406e6e8cec0",
-  "signature": "48c48534128e1603216519035b52821c1c945c563f4d06031369b0552396635e"
+  "http_frame": "POST /resource/123/comments?test=%2TRUE%&evaluation=1±2 HTTP/1.1\r\nHost: test.com\r\nContent-Length: 65\r\nContent-Type: text/plain\r\n\r\nthis is a sentence.\r\nthis sentence is on a new line.\r\nso is this.",
+  "canonical_request" : "POST\n/resource/123/comments\nevaluation=1%C2%B12&test=%252TRUE%25\ncontent-length:65\ncontent-type:text/plain\nhost:test.com\n\na41088b4f429f0a67ce7c5a2b8507d24ae475f3a93e0840a0986fc4e45ff0487",
+  "string_to_sign": "5fc252d8fa4e4335f8e22b6109a59922858c2c0b3e71405096ea2fd5f68c667b",
+  "signature": "b73c62f23924c051464a4342ed26389c9e68182a8601c701820c5155d4acbb22"
 }

@@ -1,6 +1,6 @@
 require 'openssl'
 require 'digest'
-require 'uri'
+require 'cgi'
 
 class HttpSigner
   SECRET_ENV = 'HTTPSIGNER_SECRET_KEY'
@@ -45,22 +45,23 @@ class HttpSigner
     http_method, path_and_query, http_version = header_lines[0].split(' ')
     path, query = path_and_query.split('?')
     headers = header_lines[1..-1].map { |x| x.split(': ', 2) }
-    headers = combine_headers(headers).to_h
+    headers = combine_params(headers).to_h
 
-    query = (query || '').split('&').map { |x| x.split('=', 2) }.to_h
+    query = (query || '').split('&').map { |x| x.split('=', 2) }
+    query = combine_params(query).to_h
     [http_method, path, query, headers, payload]
   end
 
-  def combine_headers(headers)
-    header_hash = headers.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(k, v), h|
+  def combine_params(params)
+    param_hash = params.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(k, v), h|
       h[k] << v
     end
-    header_hash.map { |k, v| [k, v.join(',')] }
+    param_hash.map { |k, v| [k, v.join(',')] }
   end
 
   def get_canonical_query(query)
     query
-      .map { |k, v| [uri_encode(k), v.split(',').map { |x| uri_encode(x) }.join(',')] }
+      .map { |k, v| [uri_encode(k), v.split(',').map { |x| uri_encode(x) }.join('%2C')] }
       .sort
       .map { |k, v| "#{k}=#{v}" }
       .join('&')
@@ -97,8 +98,13 @@ class HttpSigner
   end
 
   def uri_encode(value)
-    encoded = URI.encode_uri_component(value).gsub('+', '%20')
-    return value if URI.decode_uri_component(encoded) == value
+    already_encoded = CGI.unescape(value) != value.gsub('+', ' ') 
+    encoded = CGI.escape(value.gsub('+',' ')).gsub('+', '%20')
+
+    return encoded if !(value =~ /\A[a-zA-Z0-9\-\.\_\~]*\z/).nil? ||
+                      value.each_codepoint.any? { |codepoint| codepoint > 127 }
+
+    return value if already_encoded
 
     encoded
   end

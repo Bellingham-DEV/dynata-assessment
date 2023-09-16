@@ -45,11 +45,11 @@ RSpec.describe HttpSigner do
       standard_call_expectations(example1)
 		end
 
-    it 'returns the correct signature when the frame contains arbitrary headers' do
+    it 'returns the correct signature when the frame contains duplicate header keys' do
       standard_call_expectations(example2)
     end
 
-    it 'returns the correct signature when the frame contains arbitrary text with linefeeds' do
+    it 'returns the correct signature when the frame contains a payload with linefeeds' do
       standard_call_expectations(example3)
     end
 
