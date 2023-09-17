@@ -1,4 +1,8 @@
-Dynata Assessment
+# Dynata Assessment
+
+Completed by Patrick Morgan on 9/16/23 in consideration for the position of Software Architect at Dynata.
+
+See ASSESSMENT.md for background.
 
 # The Solution
 
