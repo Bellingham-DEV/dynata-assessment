@@ -28,7 +28,7 @@ Make sure you have Docker installed and running, with the `docker-compose` tool 
 
 ```bash
 # Copy the example envvars
-cp .env.sample .env
+cp .env.example .env
 ```
 
 # Demo
